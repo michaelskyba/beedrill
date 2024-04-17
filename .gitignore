@@ -27,3 +27,4 @@ dist-ssr
 *.sw?
 
 __pycache__
+database.db
