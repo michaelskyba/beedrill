@@ -1,4 +1,5 @@
 <script>
+	export let page;
 </script>
 
-<p>User Authentication</p>
+<p>Not logged in</p>

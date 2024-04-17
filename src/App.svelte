@@ -1,9 +1,18 @@
 <script>
-	import UserAuth from './UserAuth.svelte'
+	import Header from "./Header.svelte";
+	import Home from "./Home.svelte";
+	import UserAuth from "./UserAuth.svelte";
+
+	const user = null;
+	const page = "home";
 </script>
 
-<h1>Beedrill</h1>
+<Header />
 
-<p>Welcome to Beedrill.</p>
+{#if page == "home"}
+	<Home />
+{/if}
 
-<UserAuth />
+{#if !user}
+	<UserAuth {page} />
+{/if}
