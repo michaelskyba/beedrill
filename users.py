@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 class User(BaseModel):
-    user_name: str
+    username: str
     password: str
 
 
@@ -20,7 +20,7 @@ def register(request: Request, user: User):
     cursor = connection.cursor()
     cursor.execute(
         "INSERT INTO users (username, password) VALUES (?, ?);",
-        (user.user_name, user.password),
+        (user.username, user.password),
     )
     request.session["user_id"] = cursor.lastrowid
     connection.commit()
