@@ -1,10 +1,16 @@
 <script>
 	import Link from "./Link.svelte";
 
-	import { user } from "./store.js";
+	import { user, page } from "./store.js";
+
+	const titles = {
+		"home": "Beedrill",
+		"login": "Login",
+		"register": "Register"
+	}
 </script>
 
-<h1>Beedrill</h1>
+<h1>{titles[$page]}</h1>
 
 <Link
 	pageLinked="home"

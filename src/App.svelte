@@ -3,6 +3,8 @@
 	import Home from "./Home.svelte";
 	import UserAuth from "./UserAuth.svelte";
 
+	import "./css/main.css"
+
 	import { user, page } from "./store.js";
 
 	// user.update(u => 1)
