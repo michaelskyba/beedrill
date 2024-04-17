@@ -7,7 +7,8 @@
 
 	import { user, page } from "./store.js";
 
-	// user.update(u => 1)
+	// user.set(1);
+	user.set(null);
 </script>
 
 <Header />

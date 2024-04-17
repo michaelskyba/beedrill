@@ -4,9 +4,11 @@
 	import { user, page } from "./store.js";
 
 	const titles = {
-		"home": "Beedrill",
-		"login": "Login",
-		"register": "Register"
+		"home": "🐝 Beedrill",
+		"login": "⬇️ Login",
+		"register": "⬆️ Register",
+		"browse": "🌎 Browse Public Decks",
+		"my_decks": "📚 Personal Decks",
 	}
 </script>
 
