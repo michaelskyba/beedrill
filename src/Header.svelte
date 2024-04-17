@@ -1,7 +1,7 @@
 <script>
-	export let user;
-
 	import Link from "./Link.svelte";
+
+	import { user } from "./store.js";
 </script>
 
 <h1>Beedrill</h1>
@@ -11,7 +11,7 @@
 	text="Home"
 />
 
-{#if !user}
+{#if !$user}
 	<Link
 		pageLinked="login"
 		text="Login"

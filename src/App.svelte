@@ -3,16 +3,17 @@
 	import Home from "./Home.svelte";
 	import UserAuth from "./UserAuth.svelte";
 
-	const user = null;
-	const page = "home";
+	import { user, page } from "./store.js";
+
+	// user.update(u => 1)
 </script>
 
-<Header {user} />
+<Header />
 
-{#if page == "home"}
-	<Home {user} />
+{#if $page == "home"}
+	<Home />
 {/if}
 
 {#if !user}
-	<UserAuth {page} />
+	<UserAuth />
 {/if}
