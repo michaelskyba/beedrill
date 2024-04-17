@@ -7,10 +7,10 @@
 	const page = "home";
 </script>
 
-<Header />
+<Header {user} />
 
 {#if page == "home"}
-	<Home />
+	<Home {user} />
 {/if}
 
 {#if !user}
