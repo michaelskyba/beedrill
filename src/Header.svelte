@@ -38,3 +38,9 @@
 {/if}
 
 <hr>
+
+<style>
+	hr {
+		margin-bottom: 2em;
+	}
+</style>
