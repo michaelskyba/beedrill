@@ -2,9 +2,22 @@
 	export let pageLinked;
 	export let text;
 
+	import { page } from "./store.js";
+
 	const click = () => {
-		alert(pageLinked)
+		page.set(pageLinked);
 	}
 </script>
 
-<button on:click={click}>{text}</button>
+{#if $page == pageLinked}
+	<button class="active" on:click={click}>{text}</button>
+{:else}
+	<button on:click={click}>{text}</button>
+{/if}
+
+<style>
+	button.active {
+		background-color: red;
+		border: red;
+	}
+</style>

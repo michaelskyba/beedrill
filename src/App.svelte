@@ -12,6 +12,10 @@
 
 {#if $page == "home"}
 	<Home />
+{:else if $page == "login"}
+	Login
+{:else if $page == "register"}
+	Register
 {/if}
 
 {#if !user}
