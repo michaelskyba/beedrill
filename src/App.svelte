@@ -1,7 +1,7 @@
 <script>
 	import Header from "./Header.svelte";
 	import Home from "./Home.svelte";
-	import UserAuth from "./UserAuth.svelte";
+	import Register from "./Register.svelte";
 
 	import "./css/main.css"
 
@@ -17,9 +17,5 @@
 {:else if $page == "login"}
 	Login
 {:else if $page == "register"}
-	Register
-{/if}
-
-{#if !user}
-	<UserAuth />
+	<Register />
 {/if}

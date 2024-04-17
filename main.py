@@ -13,9 +13,7 @@ database.create_user_table()
 
 app = FastAPI()
 
-app.add_middleware(
-    SessionMiddleware, secret_key=SECRET_KEY
-)
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 # Route user sign up and login
 app.include_router(users.router)
@@ -29,5 +27,5 @@ app.mount("/src", StaticFiles(directory="src"), name="src")
 
 
 @app.get("/")
-def index_html():
+async def index_html():
     return FileResponse("index.html")
