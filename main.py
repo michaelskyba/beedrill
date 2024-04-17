@@ -7,6 +7,7 @@ from fastapi.responses import FileResponse
 import users
 
 import database
+
 database.create_user_table()
 
 app = FastAPI()
@@ -21,6 +22,7 @@ app.mount("/src", StaticFiles(directory="src"), name="src")
 
 # Route index.html
 
+
 @app.get("/")
 async def index_html():
-  return FileResponse('index.html')
+    return FileResponse("index.html")
