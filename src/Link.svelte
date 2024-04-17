@@ -17,7 +17,7 @@
 
 <style>
 	button.active {
-		background-color: red;
-		border: red;
+		background-color: white;
+		color: black;
 	}
 </style>
