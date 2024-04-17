@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 import sqlite3
+import bcrypt
 
 from main import SECRET_KEY
 
@@ -18,11 +19,14 @@ class User(BaseModel):
 def register(request: Request, user: User):
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
+    hashed_password = bcrypt.hashpw(
+        user.password.encode("utf-8"), bcrypt.gensalt()
+    ).decode()
     cursor.execute(
         "INSERT INTO users (username, password) VALUES (?, ?);",
-        (user.user_name, user.password),
+        (user.user_name, hashed_password),
     )
     request.session["user_id"] = cursor.lastrowid
     connection.commit()
     connection.close()
-    return {"user_id": request.session["user_id"]}
+    return {"password": hashed_password, "user_id": request.session["user_id"]}
