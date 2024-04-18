@@ -1,19 +1,63 @@
 <script>
-	import { page, myDecks } from "./store.js";
+	import { page, publicDecks, user } from "./store.js";
+	import { get } from "svelte/store";
 
 	async function getDecks() {
-		return;
-
 		const response = await fetch("http://127.0.0.1:8000/decks/get/public");
 		const data = await response.json();
 
 		const updatedDecks = data.map(deck => {
 			return {
 				id: deck.deck_id,
+				author: deck.author,
 				name: deck.deck_name,
-				due_cards: deck.due_card_count,
+				card_count: deck.card_count,
 			}
-		});
-		myDecks.set(updatedDecks);
+		}).filter(deck => deck.author != get(user).username);
+
+		publicDecks.set(updatedDecks);
+	}
+
+	page.subscribe(v => {
+		if (v == "browse_decks")
+			getDecks();
+	})
+
+	async function cloneDeck(event) {
+		const deckId = event.currentTarget.dataset.id;
+		alert(deckId)
 	}
 </script>
+
+{#if $publicDecks.length == 0}
+	<p>There are no public decks yet. Maybe you can create one yourself?</p>
+{/if}
+
+<div>
+	{#each $publicDecks as deck}
+		<blockquote>
+			<p>
+				<strong>{deck.name}</strong> by {deck.author}
+			</p>
+
+			<button on:click={cloneDeck} data-id={deck.id}>Clone ({deck.card_count} cards)</button>
+		</blockquote>
+	{/each}
+</div>
+
+<style>
+	div {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		max-height: 25em;
+		overflow-y: scroll;
+	}
+
+	blockquote {
+		margin: 1em;
+	}
+
+	button {
+		margin-top: 2em;
+	}
+</style>
