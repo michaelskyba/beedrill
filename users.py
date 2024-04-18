@@ -14,19 +14,53 @@ class User(BaseModel):
     username: str
     password: str
 
+def hash(password: str) -> str:
+    return bcrypt.hashpw(
+        password.encode("utf-8"), bcrypt.gensalt()
+    ).decode()
+
+
 
 @router.post("/register")
 def register(request: Request, user: User):
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
-    hashed_password = bcrypt.hashpw(
-        user.password.encode("utf-8"), bcrypt.gensalt()
-    ).decode()
+    hashed_password = hash(user.password)
     cursor.execute(
         "INSERT INTO users (username, password) VALUES (?, ?);",
         (user.username, hashed_password),
     )
-    request.session["user_id"] = cursor.lastrowid
     connection.commit()
+    request.session["user_id"] = cursor.lastrowid
     connection.close()
-    return {"password": hashed_password, "user_id": request.session["user_id"]}
+    return {"user_id": request.session["user_id"]}
+
+
+@router.post("/login")
+def login(request: Request, user: User):
+    USER_ID = 0
+    USERNAME = 1
+    HASHED_PASSWORD = 2
+    
+
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+    info = cursor.execute(
+        "SELECT * FROM users WHERE username = ?", (user.username,)
+    ).fetchone()
+    connection.commit()
+
+    if info is None:
+        return {"Incorrect Credentials": "Wrong password or username"}
+
+    hashed_password = info[HASHED_PASSWORD]
+
+    user_id = None    
+    if bcrypt.checkpw(user.password.encode('utf-8'), hashed_password.encode('utf-8')):
+        user_id = info[USER_ID]
+    else:
+        return {"Incorrect Credentials" : "Wrong password or username"}
+
+    request.session["user_id"] = user_id
+    connection.close()
+    return {"user_id": request.session["user_id"]}
