@@ -6,7 +6,15 @@
 	async function getDecks() {
 		const response = await fetch("http://127.0.0.1:8000/decks/get/mine");
 		const data = await response.json();
-		myDecks.set(data);
+
+		const updatedDecks = data.map(deck => {
+			return {
+				id: deck.deck_id,
+				name: deck.deck_name,
+				due_cards: deck.due_card_count,
+			}
+		});
+		myDecks.set(updatedDecks);
 	}
 
 	page.subscribe(v => {
@@ -19,15 +27,38 @@
 			return;
 
 		const isPublic = type == "public" ? 1 : 0;
-		alert(deckName + isPublic)
+
+		const response = await fetch("http://127.0.0.1:8000/decks/new", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				name: deckName,
+				public: isPublic,
+			}),
+		});
+
+		deckName = "";
+
+		const data = await response.json();
+		console.log(data);
+
+		getDecks();
 	}
 
-	async function createPublic() {
-		newDeck("public");
-	}
+	async function deleteDeck(event) {
+		const response = await fetch("http://127.0.0.1:8000/decks/delete", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				deck_id: event.currentTarget.dataset.id,
+			}),
+		});
 
-	async function createPrivate() {
-		newDeck("private");
+		getDecks();
 	}
 </script>
 
@@ -50,6 +81,7 @@
 			{/if}
 
 			<button>Edit</button>
+			<button on:click={deleteDeck} data-id={deck.id}>Delete</button>
 		</blockquote>
 	{/each}
 </div>
@@ -57,8 +89,8 @@
 <hr>
 
 <input placeholder="Deck name" bind:value={deckName}>
-<button on:click={createPublic}>Create new public deck</button>
-<button on:click={createPrivate}>Create new private deck</button>
+<button on:click={() => newDeck("public")}>Create new public deck</button>
+<button on:click={() => newDeck("private")}>Create new private deck</button>
 
 <style>
 	div {
