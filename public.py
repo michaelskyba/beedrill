@@ -72,7 +72,6 @@ def clone(request: Request, deck_id: int):
             front = card[2]
             back = card[3]
             current_time = int(time.time())
-            print(cursor.lastrowid)
             cursor.execute(
                 "INSERT INTO cards (deck_id, front, back, repetition_number, easiness_factor, repetition_interval, last_review) VALUES (?, ?, ?, ?, ?, ?, ?);",
                 (
