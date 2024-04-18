@@ -79,6 +79,11 @@ export let myDecks = createCookieStore("myDecks", [
 ]);
 
 /*
+int: deck_id
+*/
+export let reviewDeck = createCookieStore("reviewDeck", 1)
+
+/*
 Array of objects
 {
 	id: int

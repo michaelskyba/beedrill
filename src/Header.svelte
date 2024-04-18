@@ -2,7 +2,7 @@
 	import Link from "./Link.svelte";
 	import Logout from "./Logout.svelte";
 
-	import { user, page } from "./store.js";
+	import { user, page, reviewDeck } from "./store.js";
 
 	const titles = {
 		"home": "🐝 Beedrill",
@@ -40,11 +40,18 @@
 		pageLinked="my_decks"
 		text="My Decks"
 	/>
-	<Link
-		pageLinked="review"
-		text="Review"
-		disabled=true
-	/>
+	{#if $reviewDeck}
+		<Link
+			pageLinked="review"
+			text="Review"
+		/>
+	{:else}
+		<Link
+			pageLinked="review"
+			text="Review"
+			disabled=true
+		/>
+	{/if}
 	<Logout />
 {/if}
 

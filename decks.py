@@ -39,7 +39,7 @@ def new_deck(request: Request, deck: Deck):
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
 
-        user_id = request.session.get("user_id")
+        user_id = 1
         if not user_id:
             return {"message": "Not logged in"}
 
@@ -57,7 +57,7 @@ def get_personal_deck(request: Request):
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
 
-        user_id = request.session.get("user_id")
+        user_id = 1
 
         cursor.execute("SELECT * FROM decks WHERE user_id = ?;", (user_id,))
         decks = cursor.fetchall()
