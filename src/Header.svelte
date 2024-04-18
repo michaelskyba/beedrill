@@ -14,6 +14,7 @@
 </script>
 
 <h1>{titles[$page]}</h1>
+<p>Welcome to 🐝 Beedrill, your smart companion for efficient learning!</p>
 
 <Link
 	pageLinked="home"
