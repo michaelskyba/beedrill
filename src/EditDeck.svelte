@@ -8,20 +8,9 @@
 	let cards = [];
 
 	async function getCards() {
-		cards = [
-			{
-				id: 1,
-				front: "front1",
-				back: "back1",
-			},
-			{
-				id: 2,
-				front: "front2",
-				back: "back2",
-			},
-		];
-
-		// TODO backend
+		const deckId = get(editingDeck).id;
+		const response = await fetch(`http://127.0.0.1:8000/decks/${deckId}/get_all`);
+		cards = await response.json();
 	}
 
 	page.subscribe(v => {
