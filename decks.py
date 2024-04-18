@@ -57,7 +57,9 @@ def get_personal_deck(request: Request):
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
 
-        user_id = 1
+        user_id = request.session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}
 
         cursor.execute("SELECT * FROM decks WHERE user_id = ?;", (user_id,))
         decks = cursor.fetchall()
