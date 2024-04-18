@@ -2,7 +2,7 @@
 	import Link from "./Link.svelte";
 	import Logout from "./Logout.svelte";
 
-	import { user, page, reviewDeck } from "./store.js";
+	import { user, page, reviewState } from "./store.js";
 
 	const titles = {
 		"home": "🐝 Beedrill",
@@ -40,7 +40,7 @@
 		pageLinked="my_decks"
 		text="My Decks"
 	/>
-	{#if $reviewDeck}
+	{#if $reviewState.card}
 		<Link
 			pageLinked="review"
 			text="Review"
