@@ -30,6 +30,8 @@ def new_deck(request: Request, deck: Deck):
     cursor = connection.cursor()
 
     user_id = request.session.get("user_id")
+    if not user_id:
+        return {"message": "Not logged in"}
 
     cursor.execute(
         "INSERT INTO decks (user_id, deck_name, public) VALUES (?, ?, ?);",
@@ -61,7 +63,11 @@ def get_personal_deck(request: Request):
         deck_id = deck[0]
         deck_name = deck[2]
 
-        cursor.execute("SELECT * FROM cards WHERE deck_ud = ?;" (deck_id,))
+        cursor.execute(
+            "SELECT * FROM cards WHERE deck_ud = ?;"(
+                deck_id,
+            )
+        )
         cards = cursor.fetchall()
 
         for card in cards:
@@ -118,6 +124,7 @@ def add_card(request: Request, deck_id: DeckId, card: Card):
 
     connection.close()
 
+
 # @router.get("/cards/review")
 # def review_card(request: Request, deck_id: DeckId, grade: Grade):
 #     pass
@@ -135,12 +142,10 @@ def SM2(grade, repetition_number, easiness_factor, repetition_interval):
     else:
         repetition_number = 0
         repetition_interval = 1
-    easiness_factor = easiness_factor + (0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02))
+    easiness_factor = easiness_factor + (
+        0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02)
+    )
     if easiness_factor < 1.3:
         easiness_factor = 1.3
 
     return (repetition_number, easiness_factor, repetition_interval)
-        
-            
-
-
