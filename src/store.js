@@ -27,5 +27,36 @@ function createCookieStore(key, initialValue) {
 	return store;
 }
 
-export let user = createCookieStore("user", null);
 export let page = createCookieStore("page", "home");
+
+/*
+{
+	user_id: int
+	username: string
+}
+*/
+export let user = createCookieStore("user", null);
+
+/*
+Array of deck objects
+{
+	id: int
+	mine: bool (whether the user owns them)
+	name: string
+	author: string
+}
+*/
+export let decks = createCookieStore("decks", [
+	{
+		"id": 1,
+		mine: true,
+		name: "Foo",
+		author: "Joshua"
+	},
+	{
+		"id": 2,
+		mine: true,
+		name: "Baz",
+		author: "Michael"
+	},
+]);

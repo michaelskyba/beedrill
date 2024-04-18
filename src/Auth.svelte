@@ -16,7 +16,6 @@
 			"login": "http://127.0.0.1:8000/login",
 			"register": "http://127.0.0.1:8000/register"
 		}[get(page)];
-		console.log(url);
 	})
 
 	async function submit() {
