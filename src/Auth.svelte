@@ -1,11 +1,26 @@
 <script>
 	import { user, page } from "./store.js";
+	import { get } from "svelte/store";
 
-	let username;
-	let password;
+	let username = "";
+	let password = "";
+
+	let url = "";
+
+	page.subscribe(() => {
+		// Clear when switching pages
+		username = "";
+		password = "";
+
+		url = {
+			"login": "http://127.0.0.1:8000/login",
+			"register": "http://127.0.0.1:8000/register"
+		}[get(page)];
+		console.log(url);
+	})
 
 	async function submit() {
-		const response = await fetch("http://127.0.0.1:8000/register", {
+		const response = await fetch(url, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -24,8 +39,8 @@
 			page.set("home");
 		}
 		else {
-			alert("Error registering");
-			console.log(response);
+			alert("Error authenticating");
+			console.log(data);
 		}
 	}
 </script>
