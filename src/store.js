@@ -78,4 +78,26 @@ export let myDecks = createCookieStore("myDecks", [
 	},
 ]);
 
-// export let publicDecks = createCookieStore("publicDecks")
+/*
+Array of objects
+{
+	id: int
+	name: string
+	author: string
+	cards: int
+}
+*/
+export let publicDecks = createCookieStore("publicDecks", [
+	{
+		id: 7,
+		name: "Godhead",
+		author: "Mira",
+		cards: 45
+	},
+	{
+		id: 8,
+		name: "Tensor",
+		author: "George",
+		cards: 4
+	},
+])

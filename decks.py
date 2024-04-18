@@ -101,7 +101,7 @@ def get_personal_deck(request: Request):
         return json
 
 
-@router.post("/decks/delate")
+@router.post("/decks/delete")
 def delete_deck(deck_id: DeckId):
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()

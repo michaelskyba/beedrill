@@ -4,6 +4,8 @@
 	let deckName;
 
 	async function getDecks() {
+		return;
+
 		const response = await fetch("http://127.0.0.1:8000/decks/get/mine");
 		const data = await response.json();
 

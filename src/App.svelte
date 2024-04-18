@@ -2,7 +2,8 @@
 	import Header from "./Header.svelte";
 	import Home from "./Home.svelte";
 	import Auth from "./Auth.svelte";
-	import Decks from "./Decks.svelte";
+	import MyDecks from "./MyDecks.svelte";
+	import BrowseDecks from "./BrowseDecks.svelte";
 
 	import "./css/main.css"
 
@@ -16,5 +17,9 @@
 {:else if $page == "login" || $page == "register"}
 	<Auth />
 {:else if $page == "my_decks"}
-	<Decks />
+	<MyDecks />
+{:else if $page == "browse_decks"}
+	<BrowseDecks />
+{:else if $page == "review"}
+	<Review />
 {/if}
