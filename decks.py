@@ -41,7 +41,8 @@ def new_deck(request: Request, deck: Deck):
 
     return {"deck_id": cursor.lastrowid}
 
-# def is_due(repetition_number, easiness_factor, repetition_interval, last_review):
+def is_due(repetition_number, easiness_factor, repetition_interval, last_review):
+    pass
 
 
 
@@ -63,7 +64,13 @@ def get_personal_deck(request: Request):
         cursor.execute("SELECT * FROM cards WHERE deck_ud = ?;" (deck_id,))
         cards = cursor.fetchall()
 
-        due_cards = list(filter(is_due,cards))
+        for card in cards:
+            current_time = int(time.time())
+
+            if card[6] > (current_time - card[7]) / (60 * 60 * 24):
+
+
+        due_cards = []
 
 
         json.append({"deck_id": deck_id, "deck_name": deck_name})
