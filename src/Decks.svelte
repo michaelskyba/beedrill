@@ -36,14 +36,6 @@
 		const data = await response.json();
 		console.log(data);
 	}
-
-	async function createPublic() {
-		newDeck("public");
-	}
-
-	async function createPrivate() {
-		newDeck("private");
-	}
 </script>
 
 {#if $myDecks.length == 0}
@@ -72,8 +64,8 @@
 <hr>
 
 <input placeholder="Deck name" bind:value={deckName}>
-<button on:click={createPublic}>Create new public deck</button>
-<button on:click={createPrivate}>Create new private deck</button>
+<button on:click={() => newDeck("public")}>Create new public deck</button>
+<button on:click={() => newDeck("private")}>Create new private deck</button>
 
 <style>
 	div {
