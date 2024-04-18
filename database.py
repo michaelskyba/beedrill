@@ -38,7 +38,7 @@ def create_deck_table():
 def create_card_table():
     cursor.execute(
         """
-                  CREATE TABLE IF NOT EXISTS decks (
+                  CREATE TABLE IF NOT EXISTS cards (
                   card_id INTEGER PRIMARY KEY,
                   deck_id TEXT NOT NULL,
                   front TEXT NOT NULL,

@@ -43,9 +43,9 @@ def new_deck(request: Request, deck: Deck):
 
     return {"deck_id": cursor.lastrowid}
 
+
 def is_due(repetition_number, easiness_factor, repetition_interval, last_review):
     pass
-
 
 
 @router.get("/decks/get/mine")
@@ -63,23 +63,27 @@ def get_personal_deck(request: Request):
         deck_id = deck[0]
         deck_name = deck[2]
 
-        cursor.execute(
-            "SELECT * FROM cards WHERE deck_ud = ?;"(
-                deck_id,
-            )
-        )
+        cursor.execute("SELECT * FROM cards WHERE deck_id = ?;", (deck_id,))
+
         cards = cursor.fetchall()
 
+        due_cards = []
         for card in cards:
             current_time = int(time.time())
-
             if card[6] > (current_time - card[7]) / (60 * 60 * 24):
+                due_cards.append(card)
 
+        due_card_count = len(due_cards)
+        card_count = len(cards)
 
-        due_cards = []
-
-
-        json.append({"deck_id": deck_id, "deck_name": deck_name})
+        json.append(
+            {
+                "deck_id": deck_id,
+                "deck_name": deck_name,
+                "card_count": card_count,
+                "due_card_count": due_card_count,
+            }
+        )
 
     connection.commit()
 
