@@ -109,16 +109,16 @@ def get_personal_deck(request: Request):
     return json
 
 
-@router.post("/decks/delate")
+@router.post("/decks/delete")
 def delete_deck(deck_id: DeckId):
     with sqlite3.connect("database.db") as connection:
-      cursor = connection.cursor()
+        cursor = connection.cursor()
 
-      cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
-      cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
-      connection.commit()
+        cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
+        cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
+        connection.commit()
 
-      connection.close()
+        connection.close()
 
     return {"deck_id": deck_id.deck_id}
 
@@ -146,7 +146,6 @@ def add_card(request: Request, deck_add: DeckAdd):
         connection.commit()
 
         return {"card_id": cursor.lastrowid}
-
 
 
 @router.get("/cards/get_next")
