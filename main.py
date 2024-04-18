@@ -11,6 +11,7 @@ import users
 import decks
 import cards
 import cards_edit
+import public
 
 import database
 
@@ -36,6 +37,7 @@ app.include_router(users.router)
 app.include_router(decks.router)
 app.include_router(cards.router)
 app.include_router(cards_edit.router)
+app.include_router(public.router)
 
 # Route static files
 

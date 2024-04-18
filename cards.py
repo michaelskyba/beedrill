@@ -158,7 +158,6 @@ def review_card(request: Request, review: Review):
             deck.append(deck.pop(0))
 
         current_time = int(time.time())
-        
 
         (new_repetition_number, new_easiness_factor, new_repetition_interval) = SM2(
             review.grade, repetition_number, easiness_factor, last_review
@@ -174,7 +173,7 @@ def review_card(request: Request, review: Review):
             ),
         )
 
-        return {"card_id" : card_id}
+        return {"card_id": card_id}
 
 
 def SM2(grade, repetition_number, easiness_factor, repetition_interval):
