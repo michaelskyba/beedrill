@@ -37,19 +37,19 @@ class Grade(BaseModel):
 @router.post("/decks/new")
 def new_deck(request: Request, deck: Deck):
     with sqlite3.connect("database.db") as connection:
-      cursor = connection.cursor()
+        cursor = connection.cursor()
 
-      user_id = request.session.get("user_id")
-      if not user_id:
-          return {"message": "Not logged in"}
+        user_id = request.session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}
 
-      cursor.execute(
-          "INSERT INTO decks (user_id, deck_name, public) VALUES (?, ?, ?);",
-          (user_id, deck.name, deck.public),
-      )
-      connection.commit()
+        cursor.execute(
+            "INSERT INTO decks (user_id, deck_name, public) VALUES (?, ?, ?);",
+            (user_id, deck.name, deck.public),
+        )
+        connection.commit()
 
-      return {"deck_id": cursor.lastrowid}
+        return {"deck_id": cursor.lastrowid}
 
 
 @router.get("/decks/get/mine")
