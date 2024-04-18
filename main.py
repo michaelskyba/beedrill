@@ -9,6 +9,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 import users
 import decks
+import cards
 
 import database
 
@@ -32,6 +33,7 @@ app.add_middleware(
 # Route user sign up and login
 app.include_router(users.router)
 app.include_router(decks.router)
+app.include_router(cards.router)
 
 # Route static files
 

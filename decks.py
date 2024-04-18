@@ -37,19 +37,19 @@ class Grade(BaseModel):
 @router.post("/decks/new")
 def new_deck(request: Request, deck: Deck):
     with sqlite3.connect("database.db") as connection:
-      cursor = connection.cursor()
+        cursor = connection.cursor()
 
-      user_id = request.session.get("user_id")
-      if not user_id:
-          return {"message": "Not logged in"}
+        user_id = request.session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}
 
-      cursor.execute(
-          "INSERT INTO decks (user_id, deck_name, public) VALUES (?, ?, ?);",
-          (user_id, deck.name, deck.public),
-      )
-      connection.commit()
+        cursor.execute(
+            "INSERT INTO decks (user_id, deck_name, public) VALUES (?, ?, ?);",
+            (user_id, deck.name, deck.public),
+        )
+        connection.commit()
 
-      return {"deck_id": cursor.lastrowid}
+        return {"deck_id": cursor.lastrowid}
 
 
 @router.get("/decks/get/mine")
@@ -111,58 +111,3 @@ def delete_deck(deck_id: DeckId):
         connection.commit()
 
     return {"deck_id": deck_id.deck_id}
-
-
-@router.post("/cards/add")
-def add_card(request: Request, deck_add: DeckAdd):
-    with sqlite3.connect("database.db") as connection:
-        cursor = connection.cursor()
-
-        current_time = int(time.time()) - 60 * 60 * 24
-
-        cursor.execute(
-            "INSERT INTO cards (deck_id, front, back, repetition_number, easiness_factor, repetition_interval, last_review) VALUES (?, ?, ?, ?, ?, ?, ?);",
-            (
-                deck_add.deck_id,
-                deck_add.front,
-                deck_add.back,
-                0,
-                2.5,
-                0,
-                current_time,
-            ),
-        )
-
-        connection.commit()
-
-        return {"card_id": cursor.lastrowid}
-
-
-@router.get("/cards/get_next")
-def get_next(request: Request, deck_id: DeckId):
-    due_cards = request.session.get("due_cards")[deck_id.deck_id]
-
-
-# @router.get("/cards/review")
-# def review_card(request: Request, deck_id: DeckId, grade: Grade):
-
-
-def SM2(grade, repetition_number, easiness_factor, repetition_interval):
-    if grade >= 3:
-        if repetition_number == 0:
-            repetition_interval = 1
-        elif repetition_number == 1:
-            repetition_interval = 6
-        else:
-            repetition_interval = round(repetition_interval * easiness_factor)
-        repetition_number += 1
-    else:
-        repetition_number = 0
-        repetition_interval = 1
-    easiness_factor = easiness_factor + (
-        0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02)
-    )
-    if easiness_factor < 1.3:
-        easiness_factor = 1.3
-
-    return (repetition_number, easiness_factor, repetition_interval)
