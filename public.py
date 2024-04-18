@@ -66,6 +66,7 @@ def clone(request: Request, deck_id: int):
         cards = cursor.execute(
             "SELECT * FROM cards WHERE deck_id = ?;", (deck_id,)
         ).fetchall()
+
         for card in cards:
             front = card[2]
             back = card[3]

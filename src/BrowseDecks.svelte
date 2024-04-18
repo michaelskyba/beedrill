@@ -25,7 +25,13 @@
 
 	async function cloneDeck(event) {
 		const deckId = event.currentTarget.dataset.id;
-		alert(deckId)
+
+		const response = await fetch(
+			`http://127.0.0.1:8000/decks/${deckId}/clone`,
+			{method: "POST"}
+		);
+
+		page.set("my_decks");
 	}
 </script>
 
