@@ -16,8 +16,6 @@ class Deck(BaseModel):
 
 @router.get("/decks/{deck_id}/get_all")
 def get_all_cards(request: Request, deck_id: int):
-    print("Trying", deck_id)
-
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
         cursor.execute(
@@ -26,10 +24,23 @@ def get_all_cards(request: Request, deck_id: int):
         )
         connection.commit()
 
-        cards = []
-
+        json = []
         for card in cursor.fetchall():
-            cards.append({})
-            print(card)
+            front = card[2]
+            back = card[3]
+            card_id = card[0]
+            json.append({"front": front, "back": back, "card_id": card_id})
 
-    return
+        return json
+
+
+@router.delete("/cards/{card_id}/delete")
+def delete_card(request: Request, card_id: int):
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            "DELETE FROM cards WHERE card_id = ?;",
+            (card_id,),
+        )
+        connection.commit()
+        return {"card_id": card_id}
