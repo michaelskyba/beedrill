@@ -1,5 +1,6 @@
 <script>
 	import { page, myDecks, editingDeck, reviewState } from "./store.js";
+	import { get } from "svelte/store";
 
 	let deckName;
 
@@ -14,8 +15,14 @@
 				due_cards: deck.due_card_count,
 			}
 		});
+
 		myDecks.set(updatedDecks);
 	}
+
+	setInterval(() => {
+		if (get(page) == "my_decks")
+			getDecks()
+	}, 100)
 
 	page.subscribe(v => {
 		if (v == "my_decks")

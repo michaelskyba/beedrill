@@ -6,6 +6,8 @@
 	let back;
 	let topic = get(editingDeck).name;
 
+	let buttonText = "✨ Auto";
+
 	let cards = [];
 
 	async function getCards() {
@@ -40,6 +42,8 @@
 	}
 
 	async function generateCards() {
+		buttonText = "Loading...";
+
 		const response = await fetch("http://127.0.0.1:8000/cards/generate", {
 			method: "POST",
 			headers: {
@@ -52,9 +56,9 @@
 		});
 
 		const data = await response.json();
-		console.log(data);
-
 		getCards();
+
+		buttonText = "✨ Auto";
 	}
 
 	async function deleteCard(event) {
@@ -82,7 +86,7 @@
 <br>
 
 <input id="auto" placeholder="Topic" bind:value={topic}>
-<button on:click={generateCards}>✨ Auto</button>
+<button on:click={generateCards}>{buttonText}</button>
 
 {#if cards.length > 0}
 	{#each cards as card}

@@ -31,6 +31,12 @@
 			{method: "POST"}
 		);
 
+		console.log("response", response)
+
+		const data = await response.json();
+
+		console.log("data", data)
+
 		page.set("my_decks");
 	}
 </script>

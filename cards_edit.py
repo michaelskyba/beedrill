@@ -87,9 +87,6 @@ def generate_cards(request: Request, topic: Topic):
     deck_id = topic.deck_id
     cards = get_cards(topic.topic)
 
-    print("d", deck_id)
-    print("c", cards)
-
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
 
