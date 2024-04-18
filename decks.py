@@ -37,4 +37,14 @@ def new_deck(request: Request, deck: Deck):
 
 @router.post("/delate")
 def delate_deck(deck_id: DeckId):
-    pass
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+
+
+    cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
+    cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
+    connection.commit()
+
+    connection.close()
+
+    return {"deck_id": deck_id.deck_id}
