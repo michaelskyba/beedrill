@@ -59,6 +59,7 @@ def get_personal_deck(request: Request):
     decks = cursor.fetchall()
 
     json = []
+    deck_due_cards = []
     for deck in decks:
         deck_id = deck[0]
         deck_name = deck[2]
@@ -72,6 +73,8 @@ def get_personal_deck(request: Request):
             current_time = int(time.time())
             if card[6] > (current_time - card[7]) / (60 * 60 * 24):
                 due_cards.append(card)
+        
+        deck_due_cards.append((deck_id, due_cards))
 
         due_card_count = len(due_cards)
         card_count = len(cards)
@@ -84,6 +87,8 @@ def get_personal_deck(request: Request):
                 "due_card_count": due_card_count,
             }
         )
+
+    request.session["due_cards"] = deck_due_cards
 
     connection.commit()
 
