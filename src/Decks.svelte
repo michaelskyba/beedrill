@@ -1,5 +1,14 @@
 <script>
 	import { myDecks } from "./store.js";
+
+	let deckName;
+
+	async function newDeck() {
+		if (!deckName)
+			return;
+
+		alert(deckName)
+	}
 </script>
 
 <div>
@@ -23,8 +32,8 @@
 
 <hr>
 
-<input placeholder="Deck name">
-<button>Create new deck</button>
+<input placeholder="Deck name" bind:value={deckName}>
+<button on:click={newDeck}>Create new deck</button>
 
 <style>
 	div {
