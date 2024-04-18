@@ -3,6 +3,8 @@ from pydantic import BaseModel
 import sqlite3
 import bcrypt
 
+from database import USER_ID, USERNAME, HASHED_PASSWORD
+
 from main import SECRET_KEY
 
 # from database import cursor, connection
@@ -14,11 +16,9 @@ class User(BaseModel):
     username: str
     password: str
 
-def hash(password: str) -> str:
-    return bcrypt.hashpw(
-        password.encode("utf-8"), bcrypt.gensalt()
-    ).decode()
 
+def hash(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode()
 
 
 @router.post("/register")
@@ -38,10 +38,6 @@ def register(request: Request, user: User):
 
 @router.post("/login")
 def login(request: Request, user: User):
-    USER_ID = 0
-    USERNAME = 1
-    HASHED_PASSWORD = 2
-    
 
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
@@ -55,11 +51,11 @@ def login(request: Request, user: User):
 
     hashed_password = info[HASHED_PASSWORD]
 
-    user_id = None    
-    if bcrypt.checkpw(user.password.encode('utf-8'), hashed_password.encode('utf-8')):
+    user_id = None
+    if bcrypt.checkpw(user.password.encode("utf-8"), hashed_password.encode("utf-8")):
         user_id = info[USER_ID]
     else:
-        return {"Incorrect Credentials" : "Wrong password or username"}
+        return {"Incorrect Credentials": "Wrong password or username"}
 
     request.session["user_id"] = user_id
     connection.close()

@@ -5,6 +5,11 @@ connection = sqlite3.connect("database.db")
 cursor = connection.cursor()
 
 
+USER_ID = 0
+USERNAME = 1
+HASHED_PASSWORD = 2
+
+
 def create_user_table():
     cursor.execute(
         """
