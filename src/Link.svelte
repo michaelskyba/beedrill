@@ -1,18 +1,24 @@
 <script>
 	export let pageLinked;
 	export let text;
+	export let disabled = false;
 
 	import { page } from "./store.js";
 
 	const click = () => {
 		page.set(pageLinked);
 	}
+
+	let buttonClass;
+	page.subscribe(v => {
+		buttonClass = v == pageLinked ? "active" : "inactive";
+	})
 </script>
 
-{#if $page == pageLinked}
-	<button class="active" on:click={click}>{text}</button>
+{#if disabled}
+	<button class={buttonClass} disabled>{text}</button>
 {:else}
-	<button on:click={click}>{text}</button>
+	<button class={buttonClass} on:click={click}>{text}</button>
 {/if}
 
 <style>

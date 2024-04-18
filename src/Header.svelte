@@ -10,6 +10,7 @@
 		"register": "⬆️ Register",
 		"browse": "🌎 Browse Public Decks",
 		"my_decks": "📚 Personal Decks",
+		"review": "♻️ Review Cards",
 	}
 </script>
 
@@ -38,6 +39,11 @@
 	<Link
 		pageLinked="my_decks"
 		text="My Decks"
+	/>
+	<Link
+		pageLinked="review"
+		text="Review"
+		disabled=true
 	/>
 	<Logout />
 {/if}
