@@ -43,6 +43,10 @@ app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 
 
 @app.get("/")
-async def index_html():
-    # return FileResponse("dist/index.html")
+async def index():
     return FileResponse("index.html")
+
+
+@app.get("/prod")
+async def production():
+    return FileResponse("dist/index.html")

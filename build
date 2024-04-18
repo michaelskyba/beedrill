@@ -1,0 +1,9 @@
+#!/bin/sh
+rm -rf dist
+npm run build
+cd dist
+
+shrink assets
+sed -i "s|/assets/|/dist/|g" index.html
+
+echo "/prod"

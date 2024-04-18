@@ -23,6 +23,9 @@ class Card(BaseModel):
     front: str
     back: str
 
+class Grade(BaseModel):
+    grade: int
+
 
 @router.post("/decks/new")
 def new_deck(request: Request, deck: Deck):
@@ -133,10 +136,14 @@ def add_card(request: Request, deck_id: DeckId, card: Card):
 
     connection.close()
 
+@router.get("/cards/get_next")
+def get_next():
+    due_cards = request.session.get("due_cards")
+
 
 # @router.get("/cards/review")
 # def review_card(request: Request, deck_id: DeckId, grade: Grade):
-#     pass
+
 
 
 def SM2(grade, repetition_number, easiness_factor, repetition_interval):
