@@ -25,7 +25,6 @@ class Grade(BaseModel):
 
 
 class Review(BaseModel):
-    deck_id: int
     card_id: int
     grade: int
 
@@ -53,24 +52,72 @@ def add_card(request: Request, deck_id: Card):
         connection.commit()
 
         return {"card_id": cursor.lastrowid}
+    
+
+def populate_due_cards(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id: return
+
+    del request.session["due_cards"]
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
+
+        decks = cursor.execute("SELECT * FROM decks WHERE user_id = ?;", (user_id,)).fetchall()
+
+        decks_due_cards = request.session.get("due_cards") 
+        print("old", decks_due_cards)
+        if decks_due_cards is None:
+            decks_due_cards = dict()
+
+        for deck in decks:
+            deck_id = deck[0]
+            print(deck)
+
+            if decks_due_cards.get(deck_id):
+                continue
+
+            cards = cursor.execute("SELECT * FROM cards WHERE deck_id = ?;", (deck_id,)).fetchall()
+
+            due_cards = []
+            for card in cards:
+                current_time = int(time.time())
+                repetition_interval = card[6]
+                last_review = card[7]
+                if repetition_interval < (current_time - last_review) / (60 * 60 * 24):
+                    due_cards.append(card)
+
+            decks_due_cards[deck_id] = due_cards
+        request.session["due_cards"] = decks_due_cards
+        print("new", decks_due_cards)
+
+        return decks_due_cards
+
+
+    
 
 
 @router.get("/cards/get_next")
 def get_next(request: Request, deck_id: DeckId):
     due_cards = request.session.get("due_cards")[str(deck_id.deck_id)]
-    if len(due_cards) != 0:
-        due_card = due_cards[0]
-        card_id = due_card[0]
-        front = due_card[2]
-        back = due_card[3]
-        return {
-            "card_id": card_id,
-            "front": front,
-            "back": back,
-            "due_card_count": len(due_cards),
-        }
-    else:
-        return {"due_card_count": 0}
+    print(due_cards)
+    if len(due_cards) == 0:
+        json = populate_due_cards(request)
+        if len(json) == 0:
+            return {"due_card_count" : 0}
+        else:
+            return get_next(request, deck_id)
+
+    due_card = due_cards[0]
+    card_id = due_card[0]
+    front = due_card[2]
+    back = due_card[3]
+    return {
+        "card_id": card_id,
+        "front": front,
+        "back": back,
+        "due_card_count": len(due_cards),
+    }
+
 
 
 @router.get("/cards/review")
