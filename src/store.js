@@ -38,28 +38,44 @@ export let page = createCookieStore("page", "home");
 export let user = createCookieStore("user", null);
 
 /*
-Array of deck objects
+Array of objects
 {
 	id: int
-	mine: bool (whether the user owns them)
 	name: string
-	author: string
 	due_cards: int
 }
 */
-export let decks = createCookieStore("decks", [
+export let myDecks = createCookieStore("myDecks", [
 	{
 		id: 1,
-		mine: true,
 		name: "Foo",
-		author: "Joshua",
 		due_cards: 12,
 	},
 	{
 		id: 2,
-		mine: true,
 		name: "Baz",
-		author: "Michael",
 		due_cards: 0,
 	},
+	{
+		id: 3,
+		name: "1713442506",
+		due_cards: 5,
+	},
+	{
+		id: 4,
+		name: "Bar",
+		due_cards: 2,
+	},
+	{
+		id: 5,
+		name: "Second Last",
+		due_cards: 0,
+	},
+	{
+		id: 6,
+		name: "Last",
+		due_cards: 1,
+	},
 ]);
+
+// export let publicDecks = createCookieStore("publicDecks")
