@@ -14,8 +14,11 @@ class Deck(BaseModel):
     name: str
     public: int
 
+class DeckId(BaseModel):
+    deck_id: int
 
-@router.post("/new_deck")
+
+@router.post("/new")
 def new_deck(request: Request, deck: Deck):
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
@@ -31,3 +34,7 @@ def new_deck(request: Request, deck: Deck):
     connection.close()
 
     return {"deck_id": cursor.lastrowid}
+
+@router.post("/delate")
+def delate_deck(deck_id: DeckId):
+    pass
