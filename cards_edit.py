@@ -14,6 +14,11 @@ class Deck(BaseModel):
     deck_id: int
 
 
+class Topic(BaseModel):
+    deck_id: int
+    topic: str
+
+
 @router.get("/decks/{deck_id}/get_all")
 def get_all_cards(request: Request, deck_id: int):
     with sqlite3.connect("database.db") as connection:
@@ -44,3 +49,11 @@ def delete_card(request: Request, card_id: int):
         )
         connection.commit()
         return {"card_id": card_id}
+
+
+@router.post("/cards/generate")
+def generate_cards(request: Request, topic: Topic):
+
+    print(topic)
+
+    return {}
