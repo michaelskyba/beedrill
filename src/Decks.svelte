@@ -1,7 +1,18 @@
 <script>
-	import { myDecks } from "./store.js";
+	import { page, myDecks } from "./store.js";
 
 	let deckName;
+
+	async function getDecks() {
+		const response = await fetch("http://127.0.0.1:8000/decks/get/mine");
+		const data = await response.json();
+		myDecks.set(data);
+	}
+
+	page.subscribe(v => {
+		if (v == "my_decks")
+			getDecks();
+	})
 
 	async function newDeck(type) {
 		if (!deckName)
@@ -19,6 +30,10 @@
 		newDeck("private");
 	}
 </script>
+
+{#if $myDecks.length == 0}
+	<p>You have no decks yet. Create one yourself or import a public deck!</p>
+{/if}
 
 <div>
 	{#each $myDecks as deck}
