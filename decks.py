@@ -23,6 +23,13 @@ class Card(BaseModel):
     front: str
     back: str
 
+
+class DeckAdd(BaseModel):
+    deck_id: int
+    front: str
+    back: str
+
+
 class Grade(BaseModel):
     grade: int
 
@@ -62,7 +69,7 @@ def get_personal_deck(request: Request):
     decks = cursor.fetchall()
 
     json = []
-    deck_due_cards = []
+    deck_due_cards = dict()
     for deck in decks:
         deck_id = deck[0]
         deck_name = deck[2]
@@ -74,10 +81,12 @@ def get_personal_deck(request: Request):
         due_cards = []
         for card in cards:
             current_time = int(time.time())
-            if card[6] > (current_time - card[7]) / (60 * 60 * 24):
+            repetition_interval = card[6]
+            last_review = card[7]
+            if repetition_interval < (current_time - last_review) / (60 * 60 * 24):
                 due_cards.append(card)
-        
-        deck_due_cards.append((deck_id, due_cards))
+
+        deck_due_cards[deck_id] = due_cards
 
         due_card_count = len(due_cards)
         card_count = len(cards)
@@ -102,48 +111,51 @@ def get_personal_deck(request: Request):
 
 @router.post("/decks/delate")
 def delete_deck(deck_id: DeckId):
-    connection = sqlite3.connect("database.db")
-    cursor = connection.cursor()
+    with sqlite3.connect("database.db") as connection:
+      cursor = connection.cursor()
 
-    cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
-    cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
-    connection.commit()
+      cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
+      cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
+      connection.commit()
 
-    connection.close()
+      connection.close()
 
     return {"deck_id": deck_id.deck_id}
 
 
 @router.post("/cards/add")
-def add_card(request: Request, deck_id: DeckId, card: Card):
-    connection = sqlite3.connect("database.db")
-    cursor = connection.cursor()
+def add_card(request: Request, deck_add: DeckAdd):
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
 
-    current_time = int(time.time())
+        current_time = int(time.time()) - 60 * 60 * 24
 
-    cursor.execute(
-        "INSERT INTO cards (deck_id, front, back, repetition_number, easiness_factor, repetition_interval, last_review) VALUES (?, ?, ?, ?, ?, ?);",
-        deck_id.deck_id,
-        card.front,
-        card.back,
-        0,
-        2.5,
-        0,
-        current_time,
-    )
+        cursor.execute(
+            "INSERT INTO cards (deck_id, front, back, repetition_number, easiness_factor, repetition_interval, last_review) VALUES (?, ?, ?, ?, ?, ?, ?);",
+            (
+                deck_add.deck_id,
+                deck_add.front,
+                deck_add.back,
+                0,
+                2.5,
+                0,
+                current_time,
+            ),
+        )
 
-    connection.commit()
+        connection.commit()
 
-    connection.close()
+        return {"card_id": cursor.lastrowid}
+
+
 
 @router.get("/cards/get_next")
-def get_next():
-    due_cards = request.session.get("due_cards")
+def get_next(request: Request, deck_id: DeckId):
+    due_cards = request.session.get("due_cards")[deck_id.deck_id]
 
 
 # @router.get("/cards/review")
 # def review_card(request: Request, deck_id: DeckId, grade: Grade):
-
 
 
 def SM2(grade, repetition_number, easiness_factor, repetition_interval):
