@@ -37,10 +37,12 @@ app.include_router(decks.router)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/src", StaticFiles(directory="src"), name="src")
+app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 
 # Route index.html
 
 
 @app.get("/")
 async def index_html():
+    # return FileResponse("dist/index.html")
     return FileResponse("index.html")
