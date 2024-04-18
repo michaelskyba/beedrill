@@ -5,8 +5,6 @@ import bcrypt
 
 from database import USER_ID, USERNAME, HASHED_PASSWORD
 
-from main import SECRET_KEY
-
 # from database import cursor, connection
 
 router = APIRouter()
@@ -31,7 +29,7 @@ def register(request: Request, user: User):
     ).fetchone()
 
     if info is not None:
-        return {"Failed to create account" : "Username already in use"}
+        return {"Failed to create account": "Username already in use"}
 
     hashed_password = hash(user.password)
     cursor.execute(

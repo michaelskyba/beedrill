@@ -8,10 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
 import users
+import decks
 
 import database
 
 database.create_user_table()
+database.create_deck_table()
+database.create_card_table()
 
 app = FastAPI()
 
@@ -28,6 +31,7 @@ app.add_middleware(
 
 # Route user sign up and login
 app.include_router(users.router)
+app.include_router(decks.router)
 
 # Route static files
 
