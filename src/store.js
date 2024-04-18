@@ -79,6 +79,25 @@ export let myDecks = createCookieStore("myDecks", [
 ]);
 
 /*
+deck_id: int
+due_card_count: int
+step: "front" | "back"
+card: null | {
+	front: string,
+	back: string
+}
+*/
+export let reviewState = createCookieStore("reviewState", {
+	deck_id: 1,
+	due_card_count: 5,
+	step: "back",
+	card: {
+		front: "front 1",
+		back: "back 2",
+	},
+});
+
+/*
 Array of objects
 {
 	id: int
@@ -100,4 +119,4 @@ export let publicDecks = createCookieStore("publicDecks", [
 		author: "George",
 		cards: 4
 	},
-])
+]);
