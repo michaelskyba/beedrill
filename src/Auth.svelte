@@ -38,8 +38,8 @@
 			page.set("home");
 		}
 		else {
-			alert("Error authenticating");
-			console.log(data);
+			// Backend gave error
+			alert(data["message"]);
 		}
 	}
 </script>

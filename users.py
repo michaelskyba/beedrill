@@ -29,7 +29,7 @@ def register(request: Request, user: User):
     ).fetchone()
 
     if info is not None:
-        return {"Failed to create account": "Username already in use"}
+        return {"message": "Failed to create account: Username already in use"}
 
     hashed_password = hash(user.password)
     cursor.execute(
@@ -53,7 +53,7 @@ def login(request: Request, user: User):
     connection.commit()
 
     if info is None:
-        return {"Incorrect Credentials": "Wrong password or username"}
+        return {"message": "Incorrect Credentials: Wrong password or username"}
 
     hashed_password = info[HASHED_PASSWORD]
 
@@ -61,7 +61,7 @@ def login(request: Request, user: User):
     if bcrypt.checkpw(user.password.encode("utf-8"), hashed_password.encode("utf-8")):
         user_id = info[USER_ID]
     else:
-        return {"Incorrect Credentials": "Wrong password or username"}
+        return {"message": "Incorrect Credentials: Wrong password or username"}
 
     request.session["user_id"] = user_id
     connection.close()
