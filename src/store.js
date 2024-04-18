@@ -45,38 +45,7 @@ Array of objects
 	due_cards: int
 }
 */
-export let myDecks = createCookieStore("myDecks", [
-	{
-		id: 1,
-		name: "Foo",
-		due_cards: 12,
-	},
-	{
-		id: 2,
-		name: "Baz",
-		due_cards: 0,
-	},
-	{
-		id: 3,
-		name: "1713442506",
-		due_cards: 5,
-	},
-	{
-		id: 4,
-		name: "Bar",
-		due_cards: 2,
-	},
-	{
-		id: 5,
-		name: "Second Last",
-		due_cards: 0,
-	},
-	{
-		id: 6,
-		name: "Last",
-		due_cards: 1,
-	},
-]);
+export let myDecks = createCookieStore("myDecks", []);
 
 /*
 deck_id: int
@@ -111,20 +80,7 @@ Array of objects
 	id: int
 	name: string
 	author: string
-	cards: int
+	card_count: int
 }
 */
-export let publicDecks = createCookieStore("publicDecks", [
-	{
-		id: 7,
-		name: "Godhead",
-		author: "Mira",
-		cards: 45
-	},
-	{
-		id: 8,
-		name: "Tensor",
-		author: "George",
-		cards: 4
-	},
-]);
+export let publicDecks = createCookieStore("publicDecks", []);
