@@ -104,11 +104,15 @@ def populate_due_cards(request: Request):
 
 @router.get("/decks/{deck_id}/get_next")
 def get_next(request: Request, deck_id: int):
-    due_cards = request.session.get("due_cards").get(str(deck_id))
+    due_cards = request.session.get("due_cards")
 
     if not due_cards:
         due_cards = populate_due_cards(request)
 
+    if not due_cards:
+        return {"due_card_count": 0}
+
+    due_cards = due_cards.get(str(deck_id))
     if not due_cards:
         return {"due_card_count": 0}
 
