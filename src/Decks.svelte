@@ -3,11 +3,20 @@
 
 	let deckName;
 
-	async function newDeck() {
+	async function newDeck(type) {
 		if (!deckName)
 			return;
 
-		alert(deckName)
+		const isPublic = type == "public" ? 1 : 0;
+		alert(deckName + isPublic)
+	}
+
+	async function createPublic() {
+		newDeck("public");
+	}
+
+	async function createPrivate() {
+		newDeck("private");
 	}
 </script>
 
@@ -33,7 +42,8 @@
 <hr>
 
 <input placeholder="Deck name" bind:value={deckName}>
-<button on:click={newDeck}>Create new deck</button>
+<button on:click={createPublic}>Create new public deck</button>
+<button on:click={createPrivate}>Create new private deck</button>
 
 <style>
 	div {
