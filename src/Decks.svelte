@@ -9,17 +9,32 @@
 		myDecks.set(data);
 	}
 
+	/*
 	page.subscribe(v => {
 		if (v == "my_decks")
 			getDecks();
 	})
+	*/
 
 	async function newDeck(type) {
 		if (!deckName)
 			return;
 
 		const isPublic = type == "public" ? 1 : 0;
-		alert(deckName + isPublic)
+
+		const response = await fetch("http://127.0.0.1:8000/decks/new", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				name: deckName,
+				public: isPublic,
+			})
+		});
+
+		const data = await response.json();
+		console.log(data);
 	}
 
 	async function createPublic() {
