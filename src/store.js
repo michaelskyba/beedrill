@@ -83,6 +83,7 @@ deck_id: int
 due_card_count: int
 step: "front" | "back"
 card: null | {
+	id: int,
 	front: string,
 	back: string
 }
@@ -100,8 +101,8 @@ id: int
 name: string
 */
 export let editingDeck = createCookieStore("editingDeck", {
-	id: 1,
-	name: "for id 1",
+	id: 0,
+	name: "",
 });
 
 /*

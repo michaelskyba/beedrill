@@ -42,8 +42,6 @@
 		deckName = "";
 
 		const data = await response.json();
-		console.log(data);
-
 		getDecks();
 	}
 
@@ -86,6 +84,7 @@
 		newReviewState.card = {
 			front: data.front,
 			back: data.back,
+			id: data.card_id,
 		};
 
 		reviewState.set(newReviewState);

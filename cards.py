@@ -159,7 +159,7 @@ def review_card(request: Request, review: Review):
 
         current_time = int(time.time())
 
-        (new_repetition_number, new_easiness_factor, new_repetition_interval) = SM2(
+        new_repetition_number, new_easiness_factor, new_repetition_interval = SM2(
             review.grade, repetition_number, easiness_factor, last_review
         )
 
