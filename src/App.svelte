@@ -4,7 +4,9 @@
 	import Auth from "./Auth.svelte";
 	import MyDecks from "./MyDecks.svelte";
 	import BrowseDecks from "./BrowseDecks.svelte";
+	import Review from "./Review.svelte";
 
+	import "./css/sakura.css"
 	import "./css/main.css"
 
 	import { user, page } from "./store.js";

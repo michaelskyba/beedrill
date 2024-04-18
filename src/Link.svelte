@@ -23,7 +23,9 @@
 
 <style>
 	button.active {
-		background-color: white;
-		color: black;
+		background-color: #005C46;
+		border-color: #005C46;
+		color: #ffffff;
+		outline: 0;
 	}
 </style>
