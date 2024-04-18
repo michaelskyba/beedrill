@@ -4,6 +4,7 @@
 	import Auth from "./Auth.svelte";
 	import MyDecks from "./MyDecks.svelte";
 	import BrowseDecks from "./BrowseDecks.svelte";
+	import EditDeck from "./EditDeck.svelte";
 	import Review from "./Review.svelte";
 
 	import "./css/sakura.css"
@@ -20,6 +21,8 @@
 	<Auth />
 {:else if $page == "my_decks"}
 	<MyDecks />
+{:else if $page == "edit_deck"}
+	<EditDeck />
 {:else if $page == "browse_decks"}
 	<BrowseDecks />
 {:else if $page == "review"}

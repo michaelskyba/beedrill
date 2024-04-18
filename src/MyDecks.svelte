@@ -1,11 +1,9 @@
 <script>
-	import { page, myDecks } from "./store.js";
+	import { page, myDecks, editingDeck } from "./store.js";
 
 	let deckName;
 
 	async function getDecks() {
-		return;
-
 		const response = await fetch("http://127.0.0.1:8000/decks/get/mine");
 		const data = await response.json();
 
@@ -49,6 +47,14 @@
 		getDecks();
 	}
 
+	function editDeck(event) {
+		page.set("edit_deck");
+		editDeck.set({
+			id: event.currentTarget.dataset.id,
+			name: event.currentTarget.dataset.name,
+		});
+	}
+
 	async function deleteDeck(event) {
 		const response = await fetch("http://127.0.0.1:8000/decks/delete", {
 			method: "POST",
@@ -82,7 +88,7 @@
 				<button>Review</button>
 			{/if}
 
-			<button>Edit</button>
+			<button on:click={editDeck} data-name={deck.name} data-id={deck.id}>Edit</button>
 			<button on:click={deleteDeck} data-id={deck.id}>Delete</button>
 		</blockquote>
 	{/each}

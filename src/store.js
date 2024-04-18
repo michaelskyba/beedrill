@@ -98,7 +98,14 @@ export let reviewState = createCookieStore("reviewState", {
 	},
 });
 
-export let editDeckId = createCookieStore("editDeckId", null);
+/*
+id: int
+name: string
+*/
+export let editingDeck = createCookieStore("editingDeck", {
+	id: 1,
+	name: "for id 1",
+});
 
 /*
 Array of objects
