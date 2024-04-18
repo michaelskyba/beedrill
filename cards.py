@@ -59,7 +59,10 @@ def populate_due_cards(request: Request):
     if not user_id:
         return
 
-    del request.session["due_cards"]
+    # We're storing session["due_cards"] as
+    # (str) deck id --> [list of card ids (ints)]
+    # FastAPI sessions can't hold int keys or tuples I think
+
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
 
@@ -68,13 +71,12 @@ def populate_due_cards(request: Request):
         ).fetchall()
 
         decks_due_cards = request.session.get("due_cards")
-        print("old", decks_due_cards)
+
         if decks_due_cards is None:
             decks_due_cards = dict()
 
         for deck in decks:
             deck_id = deck[0]
-            print(deck)
 
             if decks_due_cards.get(deck_id):
                 continue
@@ -84,17 +86,19 @@ def populate_due_cards(request: Request):
             ).fetchall()
 
             due_cards = []
+
             for card in cards:
+                card_id = card[0]
+
                 current_time = int(time.time())
                 repetition_interval = card[6]
                 last_review = card[7]
                 if repetition_interval < (current_time - last_review) / (60 * 60 * 24):
-                    due_cards.append(card)
+                    due_cards.append(card_id)
 
-            decks_due_cards[deck_id] = due_cards
+            decks_due_cards[str(deck_id)] = due_cards
+
         request.session["due_cards"] = decks_due_cards
-        print("new", decks_due_cards)
-
         return decks_due_cards
 
 
@@ -102,6 +106,7 @@ def populate_due_cards(request: Request):
 def get_next(request: Request, deck_id: DeckId):
     due_cards = request.session.get("due_cards")[str(deck_id.deck_id)]
     print(due_cards)
+
     if len(due_cards) == 0:
         json = populate_due_cards(request)
         if len(json) == 0:

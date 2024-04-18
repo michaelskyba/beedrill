@@ -55,8 +55,9 @@ def new_deck(request: Request, deck: Deck):
 
 @router.get("/decks/get/mine")
 def get_personal_deck(request: Request):
+    print("Very initial", request.session.get("due_cards"))
     decks_due_cards = populate_due_cards(request)
-    print(decks_due_cards)
+    print("Final", decks_due_cards)
 
     # json = []
     # for deck_due_card in decks_due_cards:
