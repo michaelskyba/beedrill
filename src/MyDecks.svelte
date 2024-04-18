@@ -1,5 +1,5 @@
 <script>
-	import { page, myDecks, editingDeck } from "./store.js";
+	import { page, myDecks, editingDeck, reviewState } from "./store.js";
 
 	let deckName;
 
@@ -68,6 +68,30 @@
 
 		getDecks();
 	}
+
+	async function reviewDeck(event) {
+		const dataset = event.currentTarget.dataset;
+
+		const newReviewState = {
+			deck_id: dataset.id,
+			deck_name: dataset.name,
+			step: "front",
+			card: null,
+		};
+
+		const response = await fetch(`http://127.0.0.1:8000/decks/${dataset.id}/get_next`);
+		const data = await response.json();
+
+		newReviewState["due_card_count"] = data.due_card_count;
+		newReviewState.card = {
+			front: data.front,
+			back: data.back,
+		};
+
+		reviewState.set(newReviewState);
+
+		page.set("review");
+	}
 </script>
 
 {#if $myDecks.length == 0}
@@ -85,7 +109,7 @@
 				<button disabled>Review</button>
 			{:else}
 				<p>Due cards: <span class="due">{deck.due_cards}</span></p>
-				<button>Review</button>
+				<button on:click={reviewDeck} data-name={deck.name} data-id={deck.id}>Review</button>
 			{/if}
 
 			<button on:click={editDeck} data-name={deck.name} data-id={deck.id}>Edit</button>
