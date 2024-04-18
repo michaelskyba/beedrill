@@ -36,89 +36,79 @@ class Grade(BaseModel):
 
 @router.post("/decks/new")
 def new_deck(request: Request, deck: Deck):
-    connection = sqlite3.connect("database.db")
-    cursor = connection.cursor()
+    with sqlite3.connect("database.db") as connection:
+      cursor = connection.cursor()
 
-    user_id = request.session.get("user_id")
-    if not user_id:
-        return {"message": "Not logged in"}
+      user_id = request.session.get("user_id")
+      if not user_id:
+          return {"message": "Not logged in"}
 
-    cursor.execute(
-        "INSERT INTO decks (user_id, deck_name, public) VALUES (?, ?, ?);",
-        (user_id, deck.name, deck.public),
-    )
-    connection.commit()
+      cursor.execute(
+          "INSERT INTO decks (user_id, deck_name, public) VALUES (?, ?, ?);",
+          (user_id, deck.name, deck.public),
+      )
+      connection.commit()
 
-    connection.close()
-
-    return {"deck_id": cursor.lastrowid}
-
-
-def is_due(repetition_number, easiness_factor, repetition_interval, last_review):
-    pass
+      return {"deck_id": cursor.lastrowid}
 
 
 @router.get("/decks/get/mine")
 def get_personal_deck(request: Request):
-    connection = sqlite3.connect("database.db")
-    cursor = connection.cursor()
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
 
-    user_id = request.session.get("user_id")
+        user_id = request.session.get("user_id")
 
-    cursor.execute("SELECT * FROM decks WHERE user_id = ?;", (user_id,))
-    decks = cursor.fetchall()
+        cursor.execute("SELECT * FROM decks WHERE user_id = ?;", (user_id,))
+        decks = cursor.fetchall()
 
-    json = []
-    deck_due_cards = dict()
-    for deck in decks:
-        deck_id = deck[0]
-        deck_name = deck[2]
+        json = []
+        deck_due_cards = dict()
+        for deck in decks:
+            deck_id = deck[0]
+            deck_name = deck[2]
 
-        cursor.execute("SELECT * FROM cards WHERE deck_id = ?;", (deck_id,))
+            cursor.execute("SELECT * FROM cards WHERE deck_id = ?;", (deck_id,))
 
-        cards = cursor.fetchall()
+            cards = cursor.fetchall()
 
-        due_cards = []
-        for card in cards:
-            current_time = int(time.time())
-            repetition_interval = card[6]
-            last_review = card[7]
-            if repetition_interval < (current_time - last_review) / (60 * 60 * 24):
-                due_cards.append(card)
+            due_cards = []
+            for card in cards:
+                current_time = int(time.time())
+                repetition_interval = card[6]
+                last_review = card[7]
+                if repetition_interval < (current_time - last_review) / (60 * 60 * 24):
+                    due_cards.append(card)
 
-        deck_due_cards[deck_id] = due_cards
+            deck_due_cards[deck_id] = due_cards
 
-        due_card_count = len(due_cards)
-        card_count = len(cards)
+            due_card_count = len(due_cards)
+            card_count = len(cards)
 
-        json.append(
-            {
-                "deck_id": deck_id,
-                "deck_name": deck_name,
-                "card_count": card_count,
-                "due_card_count": due_card_count,
-            }
-        )
+            json.append(
+                {
+                    "deck_id": deck_id,
+                    "deck_name": deck_name,
+                    "card_count": card_count,
+                    "due_card_count": due_card_count,
+                }
+            )
 
-    request.session["due_cards"] = deck_due_cards
+        request.session["due_cards"] = deck_due_cards
 
-    connection.commit()
+        connection.commit()
 
-    connection.close()
-
-    return json
+        return json
 
 
 @router.post("/decks/delate")
 def delete_deck(deck_id: DeckId):
     with sqlite3.connect("database.db") as connection:
-      cursor = connection.cursor()
+        cursor = connection.cursor()
 
-      cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
-      cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
-      connection.commit()
-
-      connection.close()
+        cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
+        cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
+        connection.commit()
 
     return {"deck_id": deck_id.deck_id}
 
@@ -146,7 +136,6 @@ def add_card(request: Request, deck_add: DeckAdd):
         connection.commit()
 
         return {"card_id": cursor.lastrowid}
-
 
 
 @router.get("/cards/get_next")
