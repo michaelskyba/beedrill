@@ -17,12 +17,12 @@
 {/if}
 
 <blockquote>
-	<h3>Front</h3>
+	<h3>{$reviewState.card.front}</h3>
 	<hr>
 	{#if $reviewState.step == "front"}
 		<h3>...</h3>
 	{:else}
-		<h3>Back</h3>
+		<h3>{$reviewState.card.back}</h3>
 	{/if}
 </blockquote>
 
