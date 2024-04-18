@@ -1,5 +1,6 @@
 <script>
 	import Link from "./Link.svelte";
+	import Logout from "./Logout.svelte";
 
 	import { user, page } from "./store.js";
 
@@ -37,6 +38,7 @@
 		pageLinked="my_decks"
 		text="My Decks"
 	/>
+	<Logout />
 {/if}
 
 <hr>

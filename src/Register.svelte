@@ -1,9 +1,32 @@
 <script>
+	import { user, page } from "./store.js";
+
 	let username;
 	let password;
 
-	const submit = () => {
-		alert(`Submitting ${username} ${password}`);
+	async function submit() {
+		const response = await fetch("http://127.0.0.1:8000/register", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				username: username,
+				password: password
+			})
+		});
+
+		const data = await response.json();
+		const id = data["user_id"];
+
+		if (id) {
+			user.set({id: id, username: username});
+			page.set("home");
+		}
+		else {
+			alert("Error registering");
+			console.log(response);
+		}
 	}
 </script>
 

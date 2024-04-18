@@ -3,6 +3,8 @@ from config import OPENAI_API_KEY, SECRET_KEY
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+
 from starlette.middleware.sessions import SessionMiddleware
 
 import users
@@ -14,6 +16,15 @@ database.create_user_table()
 app = FastAPI()
 
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+
+# Avoid CORS errors for fetching
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Route user sign up and login
 app.include_router(users.router)

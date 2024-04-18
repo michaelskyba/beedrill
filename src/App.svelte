@@ -6,9 +6,6 @@
 	import "./css/main.css"
 
 	import { user, page } from "./store.js";
-
-	// user.set(1);
-	user.set(null);
 </script>
 
 <Header />
