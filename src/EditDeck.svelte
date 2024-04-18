@@ -4,6 +4,7 @@
 
 	let front;
 	let back;
+	let topic = get(editingDeck).name;
 
 	let cards = [];
 
@@ -38,6 +39,24 @@
 		getCards();
 	}
 
+	async function generateCards() {
+		const response = await fetch("http://127.0.0.1:8000/cards/generate", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				deck_id: get(editingDeck).id,
+				topic: topic,
+			}),
+		});
+
+		const data = await response.json();
+		console.log(data);
+
+		getCards();
+	}
+
 	async function deleteCard(event) {
 		const cardId = event.currentTarget.dataset.id;
 
@@ -60,6 +79,11 @@
 <input placeholder="Back" bind:value={back}>
 <button on:click={createCard}>Add</button>
 
+<br>
+
+<input id="auto" placeholder="Topic" bind:value={topic}>
+<button on:click={generateCards}>✨ Auto</button>
+
 {#if cards.length > 0}
 	{#each cards as card}
 		<blockquote>
@@ -77,5 +101,9 @@
 	hr.half {
 		width: 25%;
 		margin-left: 0;
+	}
+
+	input#auto {
+		width: 29.5em;
 	}
 </style>
