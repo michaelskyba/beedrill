@@ -19,6 +19,21 @@ class Topic(BaseModel):
     topic: str
 
 
+class Card(BaseModel):
+    front: str
+    back: str
+
+
+def get_cards(topic: Topic):
+    return [
+        {"front": "water", "back": "вода́"},
+        {"front": "dog", "back": "соба́ка"},
+        {"front": "cat", "back": "кот"},
+        {"front": "person", "back": "челове́к"},
+        {"front": "friend", "back": "друг"},
+    ]
+
+
 @router.get("/decks/{deck_id}/get_all")
 def get_all_cards(request: Request, deck_id: int):
     with sqlite3.connect("database.db") as connection:
@@ -54,6 +69,28 @@ def delete_card(request: Request, card_id: int):
 @router.post("/cards/generate")
 def generate_cards(request: Request, topic: Topic):
 
-    print(topic)
+    deck_id = topic.deck_id
+    cards = get_cards(topic.topic)
 
-    return {}
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
+
+        current_time = int(time.time()) - 60 * 60 * 24
+
+        for card in cards:
+            cursor.execute(
+                "INSERT INTO cards (deck_id, front, back, repetition_number, easiness_factor, repetition_interval, last_review) VALUES (?, ?, ?, ?, ?, ?, ?);",
+                (
+                    deck_id,
+                    card["front"],
+                    card["back"],
+                    0,
+                    2.5,
+                    0,
+                    current_time,
+                ),
+            )
+
+        connection.commit()
+
+    return {"topic": topic.topic}
