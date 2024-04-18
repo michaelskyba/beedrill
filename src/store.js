@@ -27,5 +27,5 @@ function createCookieStore(key, initialValue) {
 	return store;
 }
 
-export const user = createCookieStore("user", null);
-export const page = createCookieStore("page", "home");
+export let user = createCookieStore("user", null);
+export let page = createCookieStore("page", "home");

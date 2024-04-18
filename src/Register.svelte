@@ -1,4 +1,6 @@
 <script>
+	import { user, page } from "./store.js";
+
 	let username;
 	let password;
 
@@ -15,8 +17,16 @@
 		});
 
 		const data = await response.json();
-		alert("Done")
-		console.log(data)
+		const id = data["user_id"];
+
+		if (id) {
+			user.set({id: id, username: username});
+			page.set("home");
+		}
+		else {
+			alert("Error registering");
+			console.log(response);
+		}
 	}
 </script>
 
