@@ -26,6 +26,7 @@ class Grade(BaseModel):
 
 class Review(BaseModel):
     card_id: int
+    deck_id: int
     grade: int
 
 
@@ -133,15 +134,47 @@ def get_next(request: Request, deck_id: int):
     }
 
 
-@router.get("/cards/review")
+@router.post("/cards/review")
 def review_card(request: Request, review: Review):
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
         card_id = review.card_id
+        deck_id = review.deck_id
         cursor.execute("SELECT * FROM cards WHERE card_id = ?;", (card_id,))
         connection.commit()
         card = cursor.fetchone()
-        print(card)
+
+        correct = review.grade >= 4
+        repetition_number = card[4]
+        easiness_factor = card[5]
+        last_review = card[7]
+
+        due_cards = request.session.get("due_cards")
+        deck = due_cards[str(deck_id)]
+
+        if correct:
+            deck.pop(0)
+        else:
+            deck.append(deck.pop(0))
+
+        current_time = int(time.time())
+        
+
+        (new_repetition_number, new_easiness_factor, new_repetition_interval) = SM2(
+            review.grade, repetition_number, easiness_factor, last_review
+        )
+
+        cursor.execute(
+            "UPDATE cards SET repetition_number = ?, easiness_factor = ?, repetition_interval = ?, last_review = ?;",
+            (
+                new_repetition_number,
+                new_easiness_factor,
+                new_repetition_interval,
+                current_time,
+            ),
+        )
+
+        return {"card_id" : card_id}
 
 
 def SM2(grade, repetition_number, easiness_factor, repetition_interval):
