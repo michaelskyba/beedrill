@@ -8,7 +8,7 @@
 		"home": "🐝 Beedrill",
 		"login": "⬇️ Login",
 		"register": "⬆️ Register",
-		"browse": "🌎 Browse Public Decks",
+		"browse_decks": "🌎 Browse Public Decks",
 		"my_decks": "📚 Personal Decks",
 		"review": "♻️ Review Cards",
 	}
@@ -33,7 +33,7 @@
 	/>
 {:else}
 	<Link
-		pageLinked="browse"
+		pageLinked="browse_decks"
 		text="Browse"
 	/>
 	<Link
