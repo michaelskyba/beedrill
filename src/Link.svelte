@@ -11,7 +11,10 @@
 
 	let buttonClass;
 	page.subscribe(v => {
-		buttonClass = v == pageLinked ? "active" : "inactive";
+		if (v == pageLinked || (v == "edit_deck" && pageLinked == "my_decks"))
+			buttonClass = "active";
+		else
+			buttonClass = "inactive";
 	})
 </script>
 

@@ -89,12 +89,22 @@ card: null | {
 */
 export let reviewState = createCookieStore("reviewState", {
 	deck_id: 1,
+	deck_name: "for id 1",
 	due_card_count: 5,
 	step: "back",
 	card: {
 		front: "front 1",
 		back: "back 2",
 	},
+});
+
+/*
+id: int
+name: string
+*/
+export let editingDeck = createCookieStore("editingDeck", {
+	id: 1,
+	name: "for id 1",
 });
 
 /*

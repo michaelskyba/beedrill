@@ -2,6 +2,9 @@
 	import { reviewState } from "./store.js";
 </script>
 
+<p>There are {$reviewState.due_card_count} cards left to review in
+{$reviewState.deck_name}.</p>
+
 <blockquote>
 	<h3>Front</h3>
 	<hr>

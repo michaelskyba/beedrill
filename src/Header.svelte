@@ -10,6 +10,7 @@
 		"register": "⬆️ Register",
 		"browse_decks": "🌎 Browse Public Decks",
 		"my_decks": "📚 Personal Decks",
+		"edit_deck": "✏️ Edit Deck",
 		"review": "♻️ Review Cards",
 	}
 </script>
