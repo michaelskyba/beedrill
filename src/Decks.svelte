@@ -6,15 +6,21 @@
 	async function getDecks() {
 		const response = await fetch("http://127.0.0.1:8000/decks/get/mine");
 		const data = await response.json();
-		myDecks.set(data);
+
+		const updatedDecks = data.map(deck => {
+			return {
+				id: deck.deck_id,
+				name: deck.deck_name,
+				due_cards: deck.due_card_count,
+			}
+		});
+		myDecks.set(updatedDecks);
 	}
 
-	/*
 	page.subscribe(v => {
 		if (v == "my_decks")
 			getDecks();
 	})
-	*/
 
 	async function newDeck(type) {
 		if (!deckName)
