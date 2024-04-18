@@ -14,11 +14,12 @@ class Deck(BaseModel):
     name: str
     public: int
 
+
 class DeckId(BaseModel):
     deck_id: int
 
 
-@router.post("/new")
+@router.post("/decks/new")
 def new_deck(request: Request, deck: Deck):
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
@@ -35,11 +36,34 @@ def new_deck(request: Request, deck: Deck):
 
     return {"deck_id": cursor.lastrowid}
 
-@router.post("/delate")
-def delate_deck(deck_id: DeckId):
+
+@router.get("/decks/get/mine")
+def get_personal_deck(request: Request):
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
 
+    user_id = request.session.get("user_id")
+
+    cursor.execute("SELECT * FROM decks WHERE user_id = ?;", (user_id,))
+    decks = cursor.fetchall()
+
+    json = []
+    for deck in decks:
+        deck_id = deck[0]
+        deck_name = deck[2]
+        json.append({"deck_id": deck_id, "deck_name": deck_name})
+
+    connection.commit()
+
+    connection.close()
+
+    return json
+
+
+@router.post("/decks/delate")
+def delate_deck(deck_id: DeckId):
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
 
     cursor.execute("DELETE FROM cards WHERE deck_id = ?;", (deck_id.deck_id,))
     cursor.execute("DELETE FROM decks WHERE deck_id = ?;", (deck_id.deck_id,))
