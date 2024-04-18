@@ -25,6 +25,14 @@ def hash(password: str) -> str:
 def register(request: Request, user: User):
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
+
+    info = cursor.execute(
+        "SELECT * FROM users WHERE username = ?", (user.username,)
+    ).fetchone()
+
+    if info is not None:
+        return {"Failed to create account" : "Username already in use"}
+
     hashed_password = hash(user.password)
     cursor.execute(
         "INSERT INTO users (username, password) VALUES (?, ?);",
