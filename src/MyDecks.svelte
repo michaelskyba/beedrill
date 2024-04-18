@@ -49,7 +49,7 @@
 
 	function editDeck(event) {
 		page.set("edit_deck");
-		editDeck.set({
+		editingDeck.set({
 			id: event.currentTarget.dataset.id,
 			name: event.currentTarget.dataset.name,
 		});
