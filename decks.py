@@ -40,7 +40,7 @@ def new_deck(request: Request, deck: Deck):
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
 
-        user_id = 1
+        user_id = request.session.get("user_id")
         if not user_id:
             return {"message": "Not logged in"}
 
@@ -55,23 +55,35 @@ def new_deck(request: Request, deck: Deck):
 
 @router.get("/decks/get/mine")
 def get_personal_deck(request: Request):
-    print("Very initial", request.session.get("due_cards"))
-    decks_due_cards = populate_due_cards(request)
-    print("Final", decks_due_cards)
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return {"message": "Not logged in"}
 
-    # json = []
-    # for deck_due_card in decks_due_cards:
-    #     card_id = deck_due_card[0]
-    #     front = deck_due_card[2]
-    #     back = deck_due_card[3]
-    #     return {
-    #         "card_id": card_id,
-    #         "front": front,
-    #         "back": back,
-    #         "due_card_count": len(deck_due_card),
-    #     }
+    due_cards = populate_due_cards(request)
 
-    # return json
+    json = []
+
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
+
+        decks = cursor.execute(
+            "SELECT * FROM decks WHERE user_id = ?;", (user_id,)
+        ).fetchall()
+
+        for deck in decks:
+            deck_id = deck[0]
+            deck_name = deck[2]
+            due_card_count = len(due_cards[str(deck_id)])
+
+            json.append(
+                {
+                    "deck_id": deck_id,
+                    "deck_name": deck_name,
+                    "due_card_count": due_card_count,
+                }
+            )
+
+    return json
 
 
 @router.post("/decks/delete")
