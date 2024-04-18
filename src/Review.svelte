@@ -21,10 +21,11 @@
 			},
 			body: JSON.stringify({
 				deck_id: state.deck_id,
-				card_id: state.deck_id,
+				card_id: state.card.id,
 				grade: grade,
 			}),
 		});
+
 		data = await response.json();
 
 		response = await fetch(`http://127.0.0.1:8000/decks/${state.deck_id}/get_next`);

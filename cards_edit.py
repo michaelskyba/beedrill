@@ -39,7 +39,7 @@ def get_cards(topic):
                 "role": "system",
                 "content": 'You are a helpful flashcard creator designed to output flashcards in JSON. Output cards in the format {"flashcards": [{"front": "front of flashcard", "back": "back of flashcard"}]}',
             },
-            {"role": "user", "content": "Create 5-10 flashcards about mathematics."},
+            {"role": "user", "content": f"Create 5-10 flashcards about {topic}."},
         ],
     )
     cards = json.loads(response.choices[0].message.content).get("flashcards")
