@@ -76,7 +76,7 @@ def get_personal_deck(request: Request):
 
 
 @router.post("/decks/delate")
-def delate_deck(deck_id: DeckId):
+def delete_deck(deck_id: DeckId):
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
 
