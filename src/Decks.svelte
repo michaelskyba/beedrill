@@ -36,11 +36,29 @@
 			body: JSON.stringify({
 				name: deckName,
 				public: isPublic,
-			})
+			}),
 		});
+
+		deckName = "";
 
 		const data = await response.json();
 		console.log(data);
+
+		getDecks();
+	}
+
+	async function deleteDeck(event) {
+		const response = await fetch("http://127.0.0.1:8000/decks/delete", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				deck_id: event.currentTarget.dataset.id,
+			}),
+		});
+
+		getDecks();
 	}
 </script>
 
@@ -63,6 +81,7 @@
 			{/if}
 
 			<button>Edit</button>
+			<button on:click={deleteDeck} data-id={deck.id}>Delete</button>
 		</blockquote>
 	{/each}
 </div>
