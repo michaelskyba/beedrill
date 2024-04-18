@@ -35,8 +35,17 @@
 		back = "";
 
 		const data = await response.json();
-		console.log(data);
+		getCards();
+	}
 
+	async function deleteCard(event) {
+		const cardId = event.currentTarget.dataset.id;
+
+		const response = await fetch(`http://127.0.0.1:8000/cards/${cardId}/delete`, {
+			method: "DELETE",
+		});
+
+		const data = await response.json();
 		getCards();
 	}
 </script>
@@ -59,7 +68,7 @@
 			<p>{card.back}</p>
 			<hr class="half">
 
-			<button>Delete</button>
+			<button on:click={deleteCard} data-id={card.card_id}>Delete</button>
 		</blockquote>
 	{/each}
 {/if}
