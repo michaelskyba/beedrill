@@ -14,6 +14,8 @@
 to absorb information and enhance your memory retention like never
 before.</p>
 
+<img src="https://149664534.v2.pressablecdn.com/wp-content/uploads/2018/12/learning-v1.png">
+
 <p>Spaced repetition is a learning technique backed by extensive research in
 cognitive psychology. It involves reviewing material at gradually increasing
 intervals, which has been shown to significantly improve long-term retention of
