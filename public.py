@@ -66,7 +66,8 @@ def clone(request: Request, deck_id: int):
         cards = cursor.execute(
             "SELECT * FROM cards WHERE deck_id = ?;", (deck_id,)
         ).fetchall()
-
+        print(cards)
+        deck_id = cursor.lastrowid
         for card in cards:
             front = card[2]
             back = card[3]
@@ -74,7 +75,7 @@ def clone(request: Request, deck_id: int):
             cursor.execute(
                 "INSERT INTO cards (deck_id, front, back, repetition_number, easiness_factor, repetition_interval, last_review) VALUES (?, ?, ?, ?, ?, ?, ?);",
                 (
-                    cursor.lastrowid,
+                    deck_id,
                     front,
                     back,
                     0,
