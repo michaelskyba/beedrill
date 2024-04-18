@@ -23,6 +23,9 @@ class Card(BaseModel):
     front: str
     back: str
 
+class Grade(BaseModel):
+    grade: int
+
 
 @router.post("/decks/new")
 def new_deck(request: Request, deck: Deck):
@@ -43,9 +46,9 @@ def new_deck(request: Request, deck: Deck):
 
     return {"deck_id": cursor.lastrowid}
 
+
 def is_due(repetition_number, easiness_factor, repetition_interval, last_review):
     pass
-
 
 
 @router.get("/decks/get/mine")
@@ -59,27 +62,36 @@ def get_personal_deck(request: Request):
     decks = cursor.fetchall()
 
     json = []
+    deck_due_cards = []
     for deck in decks:
         deck_id = deck[0]
         deck_name = deck[2]
 
-        cursor.execute(
-            "SELECT * FROM cards WHERE deck_ud = ?;"(
-                deck_id,
-            )
-        )
+        cursor.execute("SELECT * FROM cards WHERE deck_id = ?;", (deck_id,))
+
         cards = cursor.fetchall()
 
+        due_cards = []
         for card in cards:
             current_time = int(time.time())
-
             if card[6] > (current_time - card[7]) / (60 * 60 * 24):
+                due_cards.append(card)
+        
+        deck_due_cards.append((deck_id, due_cards))
 
+        due_card_count = len(due_cards)
+        card_count = len(cards)
 
-        due_cards = []
+        json.append(
+            {
+                "deck_id": deck_id,
+                "deck_name": deck_name,
+                "card_count": card_count,
+                "due_card_count": due_card_count,
+            }
+        )
 
-
-        json.append({"deck_id": deck_id, "deck_name": deck_name})
+    request.session["due_cards"] = deck_due_cards
 
     connection.commit()
 
@@ -124,10 +136,14 @@ def add_card(request: Request, deck_id: DeckId, card: Card):
 
     connection.close()
 
+@router.get("/cards/get_next")
+def get_next():
+    due_cards = request.session.get("due_cards")
+
 
 # @router.get("/cards/review")
 # def review_card(request: Request, deck_id: DeckId, grade: Grade):
-#     pass
+
 
 
 def SM2(grade, repetition_number, easiness_factor, repetition_interval):
