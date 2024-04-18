@@ -1,13 +1,19 @@
+from openai import OpenAI
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 import sqlite3
 import time
+import json
+
+from config import OPENAI_API_KEY
 
 from database import USER_ID, USERNAME, HASHED_PASSWORD
 
 # from database import cursor, connection
 
 router = APIRouter()
+
+oai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 class Deck(BaseModel):
@@ -24,14 +30,24 @@ class Card(BaseModel):
     back: str
 
 
-def get_cards(topic: Topic):
-    return [
-        {"front": "water", "back": "вода́"},
-        {"front": "dog", "back": "соба́ка"},
-        {"front": "cat", "back": "кот"},
-        {"front": "person", "back": "челове́к"},
-        {"front": "friend", "back": "друг"},
-    ]
+def get_cards(topic):
+    response = oai_client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        response_format={"type": "json_object"},
+        messages=[
+            {
+                "role": "system",
+                "content": 'You are a helpful flashcard creator designed to output flashcards in JSON. Output cards in the format {"flashcards": [{"front": "front of flashcard", "back": "back of flashcard"}]}',
+            },
+            {"role": "user", "content": "Create 5-10 flashcards about mathematics."},
+        ],
+    )
+    cards = json.loads(response.choices[0].message.content).get("flashcards")
+
+    if not cards:
+        return [{"front": "Error", "back": ""}]
+
+    return cards
 
 
 @router.get("/decks/{deck_id}/get_all")
@@ -68,9 +84,11 @@ def delete_card(request: Request, card_id: int):
 
 @router.post("/cards/generate")
 def generate_cards(request: Request, topic: Topic):
-
     deck_id = topic.deck_id
     cards = get_cards(topic.topic)
+
+    print("d", deck_id)
+    print("c", cards)
 
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()

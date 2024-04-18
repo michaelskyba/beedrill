@@ -1,4 +1,4 @@
-from config import OPENAI_API_KEY, SECRET_KEY
+from config import SECRET_KEY
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
