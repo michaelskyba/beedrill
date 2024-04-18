@@ -102,26 +102,29 @@ def populate_due_cards(request: Request):
         return decks_due_cards
 
 
-@router.get("/cards/get_next")
-def get_next(request: Request, deck_id: DeckId):
-    due_cards = request.session.get("due_cards")[str(deck_id.deck_id)]
-    print(due_cards)
+@router.get("/decks/{deck_id}/get_next")
+def get_next(request: Request, deck_id: int):
+    due_cards = request.session.get("due_cards").get(str(deck_id))
 
-    if len(due_cards) == 0:
-        json = populate_due_cards(request)
-        if len(json) == 0:
-            return {"due_card_count": 0}
-        else:
-            return get_next(request, deck_id)
+    if not due_cards:
+        due_cards = populate_due_cards(request)
 
-    due_card = due_cards[0]
-    card_id = due_card[0]
-    front = due_card[2]
-    back = due_card[3]
+    if not due_cards:
+        return {"due_card_count": 0}
+
+    due_card_id = due_cards[0]
+
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
+
+        due_card = cursor.execute(
+            "SELECT * FROM cards WHERE card_id= ?;", (due_card_id,)
+        ).fetchone()
+
     return {
-        "card_id": card_id,
-        "front": front,
-        "back": back,
+        "card_id": due_card_id,
+        "front": due_card[2],
+        "back": due_card[3],
         "due_card_count": len(due_cards),
     }
 
