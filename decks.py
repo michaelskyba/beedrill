@@ -69,12 +69,8 @@ def get_personal_deck(request: Request):
     #         "back": back,
     #         "due_card_count": len(deck_due_card),
     #     }
-    
+
     # return json
-
-
-        
-    
 
 
 @router.post("/decks/delete")
