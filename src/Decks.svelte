@@ -10,9 +10,16 @@
 				<br>
 				by {deck.author}
 
-				<br>
+				<hr>
 
-				<button>Review</button>
+				{#if deck.due_cards == 0}
+					<p>There are no due cards.</p>
+					<button disabled>Review</button>
+				{:else}
+					<p>Due cards: <span class="due">{deck.due_cards}</span></p>
+					<button>Review</button>
+				{/if}
+
 				<button>Edit</button>
 			</blockquote>
 		{/if}
@@ -23,6 +30,10 @@
 	div {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
+	}
+
+	span.due {
+		color: #007559;
 	}
 
 	blockquote {

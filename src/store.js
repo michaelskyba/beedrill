@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 
 function getCookie(name) {
 	const parts = `; ${document.cookie}`.split(`; ${name}=`);
@@ -44,19 +44,22 @@ Array of deck objects
 	mine: bool (whether the user owns them)
 	name: string
 	author: string
+	due_cards: int
 }
 */
 export let decks = createCookieStore("decks", [
 	{
-		"id": 1,
+		id: 1,
 		mine: true,
 		name: "Foo",
-		author: "Joshua"
+		author: "Joshua",
+		due_cards: 12,
 	},
 	{
-		"id": 2,
+		id: 2,
 		mine: true,
 		name: "Baz",
-		author: "Michael"
+		author: "Michael",
+		due_cards: 0,
 	},
 ]);
